@@ -7,31 +7,11 @@ import x from '..'
 /*
 graphI:
 
-N0 → N1 → N4
-     ↓
-N3 ← N2 → N5
-
 N2 → N4 → N1
      ↓
 N3 ← N0 → N5
  */
 const graphI = {
-  // dependenciesBased: [
-  //   { id: 'N0' },
-  //   { id: 'N1', dependencies: [ 'N0' ] },
-  //   { id: 'N2', dependencies: [ 'N1' ] },
-  //   { id: 'N3', dependencies: [ 'N2' ] },
-  //   { id: 'N4', dependencies: [ 'N1' ] },
-  //   { id: 'N5', dependencies: [ 'N2' ] }
-  // ],
-  // dependentsBased: [
-  //   { id: 'N0', dependents: [ 'N1' ] },
-  //   { id: 'N1', dependents: [ 'N2', 'N4' ] },
-  //   { id: 'N2', dependents: [ 'N3', 'N5' ] },
-  //   { id: 'N3', dependents: [] },
-  //   { id: 'N4', dependents: [] },
-  //   { id: 'N5', dependents: [] }
-  // ]
   dependenciesBased: [
     { id: 'N0', dependencies: [ 'N4' ] },
     { id: 'N1', dependencies: [ 'N4' ] },
