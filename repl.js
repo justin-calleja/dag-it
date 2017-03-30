@@ -1,9 +1,10 @@
+const mapAll = require('@justinc/map-all')
 const Task = require('folktale/data/task')
 const repl = require('repl')
 const gNode = require('./lib/gnode')
 const utils = require('./lib/utils')
 const Result = require('folktale/data/result')
-const validateUnzippedGNodes = require('./lib/validate-unzipped-gnodes')
+const validateGParts = require('./lib/validate-gparts')
 const compose = require('folktale/core/lambda/compose').all
 const { createGraph } = require('./lib/graph')
 // const { defaultUnzippers } = require('./lib/unzippers')
@@ -36,5 +37,12 @@ const unzippedGNodesAsResult = r.context.unzippedGNodesAsResult = Result.fromVal
 const graphAsResult = r.context.graphAsResult = compose(
   // ⬆ :: Graph
   utils.map(createGraph(gNodes)),
-  utils.chain(validateUnzippedGNodes)
+  utils.chain(validateGParts),
+  // ⬆ :: GParts
+  utils.map(mapAll([
+    unzippedGNode => unzippedGNode[0],
+    unzippedGNode => unzippedGNode[1],
+    unzippedGNode => unzippedGNode[2],
+    unzippedGNode => unzippedGNode[3]
+  ]))
 )(unzippedGNodesAsResult)
