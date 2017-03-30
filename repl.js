@@ -1,15 +1,11 @@
-const mapAll = require('@justinc/map-all')
-const graphlib = require('graphlib')
 const Task = require('folktale/data/task')
 const repl = require('repl')
 const gNode = require('./lib/gnode')
 const utils = require('./lib/utils')
 const Result = require('folktale/data/result')
-const zipWith = require('lodash.zipwith')
 const validateUnzippedGNodes = require('./lib/validate-unzipped-gnodes')
 const compose = require('folktale/core/lambda/compose').all
-const { dependencyEdges, dependentEdges } = require('./lib/edges')
-const { addNodes, addEdges } = require('./lib/graph')
+const { createGraph } = require('./lib/graph')
 // const { defaultUnzippers } = require('./lib/unzippers')
 
 const unzipGNodeAsValidation = gNode.unzipAsValidation()
@@ -39,18 +35,6 @@ const unzippedGNodesAsResult = r.context.unzippedGNodesAsResult = Result.fromVal
 
 const graphAsResult = r.context.graphAsResult = compose(
   // ⬆ :: Graph
-  utils.map(([ids, allDependencies, allDependents]) => {
-    const edges = [ ...dependencyEdges(ids, allDependencies), ...dependentEdges(ids, allDependents) ]
-    const graph = new graphlib.Graph()
-    addNodes(graph)(gNodes)(ids)
-    addEdges(graph)(edges)
-    return graph
-  }),
-  // ⬆ :: Tuple< ids::Array<String>, allDependencies::Array<Array<String>>, allDependents::Array<Array<String>> >
-  utils.map(mapAll([
-    unzippedGNode => unzippedGNode[0],
-    unzippedGNode => unzippedGNode[1],
-    unzippedGNode => unzippedGNode[2]
-  ])),
+  utils.map(createGraph(gNodes)),
   utils.chain(validateUnzippedGNodes)
 )(unzippedGNodesAsResult)
