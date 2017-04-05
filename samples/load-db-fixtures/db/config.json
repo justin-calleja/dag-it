@@ -1,0 +1,6 @@
+{
+  "username": "root",
+  "password": null,
+  "dialect": "sqlite",
+  "storage": "tmp.db"
+}
